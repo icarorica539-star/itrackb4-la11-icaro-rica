@@ -1,19 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Subject Details</title>
-</head>
-<body>
-    <h1>Subject Details</h1>
-    <p>Prepared by: Rica Icaro</p>
-    <p><strong>ID:</strong> {{ $subject['id'] }}</p>
-    <p><strong>Code:</strong> {{ $subject['code'] }}</p>
-    <p><strong>Title:</strong> {{ $subject['title'] }}</p>
-    <p><strong>Units:</strong> {{ $subject['units'] }}</p>
-    <p>
-        <a href="{{ route('subjects.index') }}">
+@extends('layouts.app')
+@section('title')
+Subject Details
+@endsection
+@section('content')
+
+<div class="card">
+    <div class="card-body">
+
+        <h2 class="mb-3">Subject Details</h2>
+
+        <p> <strong>ID:</strong> {{ $subject['id'] }} </p>
+
+        <p> <strong>Code:</strong> {{ $subject['code'] }} </p>
+
+        <p> <strong>Title:</strong> {{ $subject['title'] }} </p>
+
+        <p> <strong>Units:</strong> {{ $subject['units'] }} </p>
+
+        <a class="btn btn-secondary" href="{{ route('subjects.index') }}">
             Back to Subject List
         </a>
-    </p>
-</body>
-</html>
+
+    </div>
+</div>
+
+@endsection
