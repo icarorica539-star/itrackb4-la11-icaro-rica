@@ -9,21 +9,82 @@ class SubjectController extends Controller
     private function subjects()
     {
         return [
-            1 => ['id' => 1,'code' => 'CAP102','title' => 'Capstone Project 2','units' => 3,],
-            2 => ['id' => 2,'code' => 'ITP133','title' => 'Information Assurance and Security','units' => 2,],
-            3 => ['id' => 3,'code' => 'ITP1441','title' => 'System Administration and Maintenance','units' => 2,],
-            4 => ['id' => 4,'code' => 'ITRACKB4','title' => 'Web Systems and Technologies: Web Programming 2','units' => 2,],
-            5 => ['id' => 5,'code' => 'ITP1031','title' => 'System Analysis and Design','units' => 3,],
-            6 => ['id' => 6,'code' => 'ITP1132','title' => 'Social and Professional Issues','units' => 3,],
+            1 => [
+                'id' => 1,
+                'code' => 'CAP102',
+                'title' => 'Capstone Project 2',
+                'units' => 3,
+            ],
+
+            2 => [
+                'id' => 2,
+                'code' => 'ITP133',
+                'title' => 'Information Assurance and Security',
+                'units' => 2,
+            ],
+
+            3 => [
+                'id' => 3,
+                'code' => 'ITP1441',
+                'title' => 'System Administration and Maintenance',
+                'units' => 2,
+            ],
+
+            4 => [
+                'id' => 4,
+                'code' => 'ITRACKB4',
+                'title' => 'Web Systems and Technologies: Web Programming 2',
+                'units' => 2,
+            ],
+
+            5 => [
+                'id' => 5,
+                'code' => 'ITP1031',
+                'title' => 'System Analysis and Design',
+                'units' => 3,
+            ],
+
+            6 => [
+                'id' => 6,
+                'code' => 'ITP1132',
+                'title' => 'Social and Professional Issues',
+                'units' => 3,
+            ],
         ];
     }
-   
-    public function index()
+
+    public function index(Request $request)
     {
+        
+        $units = $request->query('units');
+        $code = $request->query('code');
+
+  
         $subjects = $this->subjects();
 
+        if ($units !== null && $units !== '') {
+
+            $subjects = array_filter($subjects, function ($subject) use ($units) {
+
+                return $subject['units'] == $units;
+
+            });
+        }
+
+        if ($code !== null && $code !== '') {
+
+            $codes = preg_split('/\s+/', trim($code));
+            $subjects = array_filter($subjects, function ($subject) use ($codes) {
+                return in_array($subject['code'], $codes);
+
+            });
+        }
+
+        // Send data to Blade view
         return view('subject.index', [
-            'subjects' => $subjects
+            'subjects' => $subjects,
+            'units' => $units,
+            'code' => $code,
         ]);
     }
 
@@ -31,32 +92,36 @@ class SubjectController extends Controller
     {
         //
     }
+
     public function store(Request $request)
     {
         //
     }
+
     public function show($id)
     {
         $subjects = $this->subjects();
 
+        // If subject does not exist
         if (!isset($subjects[$id])) {
             abort(404);
         }
 
         return view('subject.show', [
-            'subject' => $subjects[$id]
+            'subject' => $subjects[$id],
         ]);
     }
+
     public function edit($id)
     {
         //
     }
 
-    
     public function update(Request $request, $id)
     {
         //
     }
+
     public function destroy($id)
     {
         //
@@ -67,32 +132,7 @@ class SubjectController extends Controller
         $subjects = $this->subjects();
 
         return view('subject.show', [
-            'subject' => $subjects[4]
-        ]);
-    }
-
-    public function filter($units = null)
-    {
-        $subjects = $this->subjects();
-
-        if ($units === null) {
-            return view('subject.filter', [
-                'subjects' => $subjects,
-                'units' => null
-            ]);
-        }
-
-        $filtered = [];
-
-        foreach ($subjects as $subject) {
-            if ($subject['units'] == $units) {
-                $filtered[] = $subject;
-            }
-        }
-
-        return view('subject.filter', [
-            'subjects' => $filtered,
-            'units' => $units
+            'subject' => $subjects[4],
         ]);
     }
 }

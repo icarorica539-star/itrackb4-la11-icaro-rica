@@ -7,8 +7,16 @@ use App\Http\Controllers\SubjectController;
 Route::get('/subjects/featured', [SubjectController::class, 'featured'])
     ->name('subjects.featured');
 
-Route::get('/subjects/filter/{units?}', [SubjectController::class, 'filter'])
-    ->name('subjects.filter');
+
+Route::get('/subjects/filter/{units?}', function ($units = null) {
+    if ($units) {
+        return redirect()->route('subjects.index', [
+            'units' => $units
+        ]);
+    }
+
+    return redirect()->route('subjects.index');
+});
 
 
 Route::resource('subjects', SubjectController::class)

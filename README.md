@@ -1,13 +1,21 @@
-# ITRACKB4 Laboratory Activity 3
+# ITRACKB4 Laboratory Activity 6
 
-# Q1. Why did you place the featured route before the detail route?
+# Q1. You added a second filter without adding a single route. Explain why no new route was needed. Your answer should say something about what the router actually looks at.
 
-I placed the featured route before the detail route because the detail route uses `{id}`. If the detail route comes first, Laravel may treat "featured" as an ID.
+No new route was needed because the router looks at the URL path and method. The filters are query parameters, so the same /subjects route handles them.
 
-# Q2. What happens when someone visits an id that does not exist?
 
-When the ID does not exist in the subject data, the application returns a 404 page. I used `abort(404)` in the controller to handle this.
+# Q2. Suppose you had built both filters as route parameters instead. Describe what the URL for 'year 4 only, no course filter' would have to look like, and why.
 
-# Q3. Why do your links use route names instead of typed URLs?
+It could be /students/4/all. Route parameters are part of the URL, so both values need to be included.
 
-I use route names because they make the links easier to maintain. If the URL path changes later, I only need to update the route instead of changing every link.
+
+# Q3. Your navigation link stays marked on a detail page and also when a filter is applied. Only one of those two needed a change to your pattern. Say which one, and why the other needed nothing.
+
+The detail-page navigation needed a change because it has to recognize the detail route. The filter needed no change because query parameters still use the same route.
+
+
+# Q4. You deleted your old filter method but kept the empty store and update methods, even though none of the three can be reached by a URL. Explain the difference between them.
+
+The detail-page navigation needed a change because it has to recognize the detail route. The filter needed no change because query parameters still use the same route.
+
