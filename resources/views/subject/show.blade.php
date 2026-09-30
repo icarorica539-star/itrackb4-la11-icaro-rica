@@ -13,7 +13,7 @@ Subject Details
 
         <p> <strong>Code:</strong> {{ $subject['code'] }} </p>
 
-        <p> <strong>Title:</strong> {{ $subject['title'] }} </p>
+        <p> <strong>Name:</strong> {{ $subject['name'] }} </p>
 
         <p> <strong>Units:</strong> {{ $subject['units'] }} </p>
 

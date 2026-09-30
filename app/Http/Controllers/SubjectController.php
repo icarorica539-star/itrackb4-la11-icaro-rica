@@ -8,81 +8,49 @@ class SubjectController extends Controller
 {
     private function subjects()
     {
-        return [
-            1 => [
-                'id' => 1,
-                'code' => 'CAP102',
-                'title' => 'Capstone Project 2',
-                'units' => 3,
-            ],
+        $path = storage_path('app/subjects.json');
+        return json_decode(file_get_contents($path), true);
+    }
 
-            2 => [
-                'id' => 2,
-                'code' => 'ITP133',
-                'title' => 'Information Assurance and Security',
-                'units' => 2,
-            ],
+    private function saveSubjects(array $subjects)
+    {
+        $path = storage_path('app/subjects.json');
 
-            3 => [
-                'id' => 3,
-                'code' => 'ITP1441',
-                'title' => 'System Administration and Maintenance',
-                'units' => 2,
-            ],
+        $result = file_put_contents(
+            $path,
+            json_encode($subjects, JSON_PRETTY_PRINT),
+            LOCK_EX
+        );
 
-            4 => [
-                'id' => 4,
-                'code' => 'ITRACKB4',
-                'title' => 'Web Systems and Technologies: Web Programming 2',
-                'units' => 2,
-            ],
-
-            5 => [
-                'id' => 5,
-                'code' => 'ITP1031',
-                'title' => 'System Analysis and Design',
-                'units' => 3,
-            ],
-
-            6 => [
-                'id' => 6,
-                'code' => 'ITP1132',
-                'title' => 'Social and Professional Issues',
-                'units' => 3,
-            ],
-        ];
+        if ($result === false) {
+            abort(500, 'Cannot write to ' . $path . '. Check that the file is not read-only.');
+        }
     }
 
     public function index(Request $request)
     {
-        
-        $units = $request->query('units');
-        $code = $request->query('code');
+        $units = $request->query('units', '');
+        $code = $request->query('code', '');
 
-  
-        $subjects = $this->subjects();
+        $allSubjects = $this->subjects();
+        $subjects = $allSubjects;
 
         if ($units !== null && $units !== '') {
-
             $subjects = array_filter($subjects, function ($subject) use ($units) {
-
                 return $subject['units'] == $units;
-
             });
         }
 
         if ($code !== null && $code !== '') {
-
             $codes = preg_split('/\s+/', trim($code));
             $subjects = array_filter($subjects, function ($subject) use ($codes) {
                 return in_array($subject['code'], $codes);
-
             });
         }
 
-        // Send data to Blade view
         return view('subject.index', [
             'subjects' => $subjects,
+            'allSubjects' => $allSubjects,
             'units' => $units,
             'code' => $code,
         ]);
@@ -90,25 +58,40 @@ class SubjectController extends Controller
 
     public function create()
     {
-        //
+        return view('subjects.create');
     }
 
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'code'  => 'required|string|max:20',
+            'name'  => 'required|string|max:100',
+            'units' => 'required|in:1,2,3',
+        ]);
+
+        $subjects = $this->subjects();
+
+        $validated['units'] = (int) $validated['units'];
+        $validated['id'] = (collect($subjects)->max('id') ?? 0) + 1;
+
+        $subjects[] = $validated;
+        $this->saveSubjects($subjects);
+
+        return redirect()
+            ->route('subjects.index')
+            ->with('success', 'Subject added.');
     }
 
     public function show($id)
     {
-        $subjects = $this->subjects();
+        $subject = collect($this->subjects())->firstWhere('id', (int) $id);
 
-        // If subject does not exist
-        if (!isset($subjects[$id])) {
+        if (!$subject) {
             abort(404);
         }
 
         return view('subject.show', [
-            'subject' => $subjects[$id],
+            'subject' => $subject,
         ]);
     }
 
@@ -129,10 +112,14 @@ class SubjectController extends Controller
 
     public function featured()
     {
-        $subjects = $this->subjects();
+        $subject = collect($this->subjects())->firstWhere('id', 5);
+
+        if (!$subject) {
+            abort(404);
+        }
 
         return view('subject.show', [
-            'subject' => $subjects[4],
+            'subject' => $subject,
         ]);
     }
 }

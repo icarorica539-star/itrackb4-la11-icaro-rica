@@ -1,21 +1,14 @@
 # ITRACKB4 Laboratory Activity 6
 
-# Q1. You added a second filter without adding a single route. Explain why no new route was needed. Your answer should say something about what the router actually looks at.
+# Q1. Your form sends data with POST rather than GET. Explain what would go wrong if it used GET instead. Your answer should say something about what a browser does when a page is refreshed.
 
-No new route was needed because the router looks at the URL path and method. The filters are query parameters, so the same /subjects route handles them.
-
-
-# Q2. Suppose you had built both filters as route parameters instead. Describe what the URL for 'year 4 only, no course filter' would have to look like, and why.
-
-It could be /students/4/all. Route parameters are part of the URL, so both values need to be included.
+If it used GET, the form data would appear in the URL. When the browser is refreshed, it may repeat the request and cause the same data to be submitted again. This could create duplicate records.
 
 
-# Q3. Your navigation link stays marked on a detail page and also when a filter is applied. Only one of those two needed a change to your pattern. Say which one, and why the other needed nothing.
+# Q2. When validation fails, your controller does not run the code that saves the record — and you did not write an if statement to stop it. Explain what actually stops it, and where the visitor ends up.
 
-The detail-page navigation needed a change because it has to recognize the detail route. The filter needed no change because query parameters still use the same route.
+Laravel's validation automatically stops the controller from continuing when validation fails. It redirects the visitor back to the previous form page and provides the validation errors.
 
+# Q3. Your success message is displayed from the layout, which renders on every page. Explain why it does not appear on every page.
 
-# Q4. You deleted your old filter method but kept the empty store and update methods, even though none of the three can be reached by a URL. Explain the difference between them.
-
-The detail-page navigation needed a change because it has to recognize the detail route. The filter needed no change because query parameters still use the same route.
-
+The success message only appears when a success message exists in the session. Laravel stores it temporarily after a successful action, so other pages do not show it when there is no success message.
