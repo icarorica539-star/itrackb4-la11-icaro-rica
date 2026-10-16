@@ -1,14 +1,14 @@
-# ITRACKB4 Laboratory Activity 6
+# ITRACKB4 Laboratory Activity 9
 
-# Q1. Your form sends data with POST rather than GET. Explain what would go wrong if it used GET instead. Your answer should say something about what a browser does when a page is refreshed.
+# F1. Which column did you make nullable, and why that one and not another?
 
-If it used GET, the form data would appear in the URL. When the browser is refreshed, it may repeat the request and cause the same data to be submitted again. This could create duplicate records.
+I made the prerequisite column nullable because some subjects do not have prerequisites. I kept the other important columns required because they contain the basic information needed for each subject.
 
 
-# Q2. When validation fails, your controller does not run the code that saves the record — and you did not write an if statement to stop it. Explain what actually stops it, and where the visitor ends up.
+# F2. Which step failed first for you, and what did the error say?
 
-Laravel's validation automatically stops the controller from continuing when validation fails. It redirects the visitor back to the previous form page and provides the validation errors.
+The first problem I encountered was when I opened the subjects page. It showed the error View [subject.index] not found. I realized that the folder name in my code was incorrect. My file was inside the subjects folder, so I changed it to subjects.index, and the page worked.
 
-# Q3. Your success message is displayed from the layout, which renders on every page. Explain why it does not appear on every page.
+# F3. You changed no Blade file in Part D, yet your pages still work. Why not?
 
-The success message only appears when a success message exists in the session. Laravel stores it temporarily after a successful action, so other pages do not show it when there is no success message.
+The pages still worked because I only changed where the data came from. Before, the controller got the subjects from a JSON file. In Part D, I changed it to get the data from the database. Since the controller still passed the data to the Blade files using the same variable names and expected fields, I did not need to change the views.
