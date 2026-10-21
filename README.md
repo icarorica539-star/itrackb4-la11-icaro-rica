@@ -1,14 +1,17 @@
-# ITRACKB4 Laboratory Activity 9
+# ITRACKB4 Laboratory Activity 10
 
-# F1. Which column did you make nullable, and why that one and not another?
+# G1. Which column did you turn into a table, and why that one and not another?
 
-I made the prerequisite column nullable because some subjects do not have prerequisites. I kept the other important columns required because they contain the basic information needed for each subject.
+I converted the prerequisite column into a separate prerequisites table because its values come from a fixed list and can be reused by multiple subjects. This avoids repeating prerequisite text and allows each subject to reference a valid lookup record through prerequisite_id.
 
 
-# F2. Which step failed first for you, and what did the error say?
+# G2. What number did Screenshot 6 show, and why exactly that number?
 
-The first problem I encountered was when I opened the subjects page. It showed the error View [subject.index] not found. I realized that the folder name in my code was incorrect. My file was inside the subjects folder, so I changed it to subjects.index, and the page worked.
 
-# F3. You changed no Blade file in Part D, yet your pages still work. Why not?
+Screenshot 6 showed 6 queries when five subjects were displayed. One query retrieved the subjects, and five additional queries retrieved each subject's prerequisite individually. After adding with('prerequisite'), the query count decreased to two.
 
-The pages still worked because I only changed where the data came from. Before, the controller got the subjects from a JSON file. In Part D, I changed it to get the data from the database. Since the controller still passed the data to the Blade files using the same variable names and expected fields, I did not need to change the views.
+
+
+# G3. Your belongsTo method is named in the singular. What would break if you made it plural?
+
+The relationship method is named prerequisite() because each subject belongs to one prerequisite record. If I named it prerequisites(), Eloquent would infer a foreign key named prerequisites_id, which does not match the actual prerequisite_id column, unless I explicitly configured the relationship.

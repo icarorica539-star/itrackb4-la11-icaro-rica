@@ -1,27 +1,25 @@
-@extends('layouts.app')
-@section('title')
-Subject Details
-@endsection
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Subject Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body class="container py-4">
 
-<div class="card">
-    <div class="card-body">
+    <h1>Subject Details</h1>
 
-        <h2 class="mb-3">Subject Details</h2>
+    <p><strong>Code:</strong> {{ $subject->code }}</p>
+    <p><strong>Title:</strong> {{ $subject->title }}</p>
+    <p><strong>Units:</strong> {{ $subject->units }}</p>
+    <p><strong>Active:</strong> {{ $subject->is_active ? 'Yes' : 'No' }}</p>
+    <p><strong>Prerequisite:</strong> {{ $subject->prerequisite->name }}</p>
 
-        <p> <strong>ID:</strong> {{ $subject['id'] }} </p>
+    <a href="{{ route('subjects.index') }}" class="btn btn-secondary">
+        Back
+    </a>
 
-        <p> <strong>Code:</strong> {{ $subject['code'] }} </p>
-
-        <p> <strong>Name:</strong> {{ $subject['name'] }} </p>
-
-        <p> <strong>Units:</strong> {{ $subject['units'] }} </p>
-
-        <a class="btn btn-secondary" href="{{ route('subjects.index') }}">
-            Back to Subject List
-        </a>
-
-    </div>
-</div>
-
-@endsection
+</body>
+</html>

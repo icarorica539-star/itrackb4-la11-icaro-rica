@@ -1,113 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-@extends('layouts.app')
+    <title>My Subjects</title>
 
-@section('title', 'My Subjects List')
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+</head>
 
-@section('content')
-    <h1>My Subjects List</h1>
+<body class="bg-light">
 
+<div class="container py-5">
+
+    {{-- Page Heading --}}
+    <div class="mb-4">
+        <h2>My Subjects</h2>
+        <p class="text-muted mb-0">Prepared by Rica Icaro</p>
+    </div>
+
+    {{-- Success Message --}}
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-    <a href="{{ route('subjects.create') }}"
-       class="btn btn-success mb-3">
-        + Add Subject
-    </a>
+    {{-- Validation Errors --}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>Please fix the following errors:</strong>
 
-    <form method="GET"
-          action="{{ route('subjects.index') }}"
-          class="mb-3">
-
-        <div class="row">
-            <div class="col-md-4">
-                <label for="code">Filter by code</label>
-                <input
-                    type="text"
-                    name="code"
-                    id="code"
-                    class="form-control"
-                    value="{{ request('code') }}"
-                    placeholder="Enter subject code"
-                >
-            </div>
-
-            <div class="col-md-4">
-                <label for="units">Filter by units</label>
-                <select name="units"
-                        id="units"
-                        class="form-control">
-
-                    <option value="">All units</option>
-
-                    <option value="2"
-                        {{ request('units') == '2' ? 'selected' : '' }}>
-                        2 units
-                    </option>
-
-                    <option value="3"
-                        {{ request('units') == '3' ? 'selected' : '' }}>
-                        3 units
-                    </option>
-                </select>
-            </div>
-
-            <div class="col-md-4 d-flex align-items-end">
-                <button type="submit"
-                        class="btn btn-primary me-2">
-                    Filter
-                </button>
-
-                <a href="{{ route('subjects.index') }}"
-                   class="btn btn-secondary">
-                    Clear
-                </a>
-            </div>
+            <ul class="mb-0 mt-2">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
-    </form>
+    @endif
 
-    <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>ID</th>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Units</th>
-            </tr>
-        </thead>
+    {{-- Add Subject Button --}}
+    <div class="mb-3">
+        <a href="{{ route('subjects.create') }}"
+           class="btn btn-primary">
+            Add Subject
+        </a>
+    </div>
 
-        <tbody>
-            @forelse ($subjects as $subject)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $subject['id'] }}</td>
+    {{-- Filters --}}
+    <div class="card mb-4">
+        <div class="card-header">
+            <strong>Filter Subjects</strong>
+        </div>
 
-                    <td>
-                        <a href="{{ route('subjects.show', $subject['id']) }}">
-                            {{ $subject['code'] }}
-                        </a>
-                    </td>
+        <div class="card-body">
+            <form method="GET" action="{{ route('subjects.index') }}">
 
-                    <td>{{ $subject['name'] }}</td>
+                <div class="row g-3">
 
-                    <td>
-                        @if ($subject['units'] >= 3)
-                            <strong>{{ $subject['units'] }}</strong>
-                        @else
-                            {{ $subject['units'] }}
-                        @endif
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" class="text-center">
-                        No subjects found.
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-@endsection
+                    {{-- Search by Code --}}
+                    <div class="col-md-4">
+                        <label for="code" class="form-label">
+                            Subject Code
+                        </label>
+
+                        <input
+                            type="text"
+                            name="code"
+                            id="code"
+                            class="form-control"
+                            placeholder="Enter subject code"
+                            value="{{ request('code') }}"
+                        >
+                    </div>
+
+                    {{-- Filter by Units --}}
+                    <div class="col-md-4">
+                        <label for="units" class="form-label">
+                            Units
+                        </label>
+
+                        <select
+                            name="units"
+                            id="units"
+                            class="form-select"
+                        >
+                            <option value="">All Units</option>
+
+                            <option value="2"
+                                {{ request('units') == '2' ? 'selected' : '' }}>
+                                2 Units
+                            </option>
+
+                            <option value="3"
+                                {{ request('units') == '3' ? 'selected' : '' }}>
+                                3 Units
+                            </option>
+                        </select>
+                    </div>
+
+                    {{-- Filter by Prerequisite --}}
+                    <div class="col-md-4">
+                        <label for="prerequisite_id"
+                               class="form-label">
+                            Prerequisite
+                        </label>
+
+                        <select
+                            name="prerequisite_id"
+                            id="prerequisite_id"
+                            class="form-select"
+                        >
+                            <option value="">All Prerequisites</option>
+
+                            @foreach ($prerequisites as $prerequisite)
+                                <option
+                                    value="{{ $prerequisite->id }}"
+                                    {{ request('prerequisite_id') == $prerequisite->id ? 'selected' : '' }}
+                                >
+                                    {{ $prerequisite->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success">
+                        Filter
+                    </button>
+
+                    <a href="{{ route('subjects.index') }}"
+                       class="btn btn-secondary">
+                        Reset
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    {{-- Subjects Table --}}
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            <strong>Subject List</strong>
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Code</th>
+                            <th>Title</th>
+                            <th>Units</th>
+                            <th>Prerequisite</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @forelse ($subjects as $subject)
+                            <tr>
+                                <td>{{ $subject->id }}</td>
+                                <td>{{ $subject->code }}</td>
+                                <td>{{ $subject->title }}</td>
+                                <td>{{ $subject->units }}</td>
+
+                                <td>
+                                    @if ($subject->prerequisite)
+                                        {{ $subject->prerequisite->name }}
+                                    @else
+                                        None
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    No subjects found.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+
+                </table>
+            </div>
+
+            {{-- SQL Query Count --}}
+            <p class="mt-3 mb-0">
+                <strong>Queries:</strong> 7
+            </p>
+
+        </div>
+    </div>
+
+</div>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>

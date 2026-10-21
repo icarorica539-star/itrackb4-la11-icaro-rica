@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Subject extends Model
 {
@@ -11,14 +12,11 @@ class Subject extends Model
         'title',
         'units',
         'is_active',
-        'prerequisite',
+        'prerequisite_id',
     ];
 
-    protected function casts(): array
+    public function prerequisite(): BelongsTo
     {
-        return [
-            'units' => 'integer',
-            'is_active' => 'boolean',
-        ];
+        return $this->belongsTo(Prerequisite::class);
     }
 }

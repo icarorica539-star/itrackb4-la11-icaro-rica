@@ -1,40 +1,32 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\SubjectController;
+use App\Models\Subject;
 
-// Display all subjects
+Route::get('/', function () {
+    return redirect()->route('subjects.index');
+});
+
 Route::get('/subjects', [SubjectController::class, 'index'])
     ->name('subjects.index');
 
-// Create subject form
 Route::get('/subjects/create', [SubjectController::class, 'create'])
     ->name('subjects.create');
 
-// Save new subject
 Route::post('/subjects', [SubjectController::class, 'store'])
     ->name('subjects.store');
 
-// Featured subject — place before /subjects/{id}
-Route::get('/subjects/featured', [SubjectController::class, 'featured'])
-    ->name('subjects.featured');
-
-// Display one subject
-Route::get('/subjects/{id}', [SubjectController::class, 'show'])
-    ->whereNumber('id')
-    ->name('subjects.show');
-
-// Edit subject form
-Route::get('/subjects/{id}/edit', [SubjectController::class, 'edit'])
-    ->whereNumber('id')
+Route::get('/subjects/{subject}/edit', [SubjectController::class, 'edit'])
     ->name('subjects.edit');
 
-// Update subject
-Route::put('/subjects/{id}', [SubjectController::class, 'update'])
-    ->whereNumber('id')
+Route::put('/subjects/{subject}', [SubjectController::class, 'update'])
     ->name('subjects.update');
 
-// Delete subject
-Route::delete('/subjects/{id}', [SubjectController::class, 'destroy'])
-    ->whereNumber('id')
+Route::delete('/subjects/{subject}', [SubjectController::class, 'destroy'])
     ->name('subjects.destroy');
+
+Route::get('/subjects/{subject}', [SubjectController::class, 'show'])
+    ->name('subjects.show');
+
