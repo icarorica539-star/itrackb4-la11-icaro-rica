@@ -101,9 +101,9 @@ class SubjectController extends Controller
      */
     public function show(Subject $subject)
     {
-        $subject->load('prerequisite');
+         $prerequisites = Prerequisite::all();
 
-        return view('subjects.show', compact('subject'));
+    return view('subjects.edit', compact('subject', 'prerequisites'));
     }
 
     /**
@@ -124,21 +124,19 @@ class SubjectController extends Controller
      */
     public function update(Request $request, Subject $subject)
     {
-        $validated = $request->validate([
-            'code' => 'required|string|max:255|unique:subjects,code,' . $subject->id,
-            'title' => 'required|string|max:255',
-            'units' => 'required|integer|min:1',
-            'is_active' => 'sometimes|boolean',
-            'prerequisite_id' => 'nullable|exists:prerequisites,id',
-        ]);
+        $validated = validator($request->all(), [
+        'code' => 'required|string|max:255',
+        'title' => 'required|string|max:255',
+        'units' => 'required|integer|min:1',
+        'is_active' => 'required|boolean',
+        'prerequisite_id' => 'nullable|exists:prerequisites,id',
+    ])->validate();
 
-        $validated['is_active'] = $request->boolean('is_active');
+    $subject->update($validated);
 
-        $subject->update($validated);
-
-        return redirect()
-            ->route('subjects.index')
-            ->with('success', 'Subject updated successfully!');
+    return redirect()
+        ->route('subjects.index')
+        ->with('success', 'Subject updated successfully!');
     }
 
     /**

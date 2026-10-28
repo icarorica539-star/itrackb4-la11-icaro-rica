@@ -1,17 +1,15 @@
 # ITRACKB4 Laboratory Activity 10
 
-# G1. Which column did you turn into a table, and why that one and not another?
+# G1. Route Model Binding
 
-I converted the prerequisite column into a separate prerequisites table because its values come from a fixed list and can be reused by multiple subjects. This avoids repeating prerequisite text and allows each subject to reference a valid lookup record through prerequisite_id.
-
-
-# G2. What number did Screenshot 6 show, and why exactly that number?
+Route model binding requires the Subject model to be type-hinted and the parameter name $subject to match the {subject} route segment. If either condition is incorrect, Laravel may fail to inject the expected record, and the method will not work as intended.
 
 
-Screenshot 6 showed 6 queries when five subjects were displayed. One query retrieved the subjects, and five additional queries retrieved each subject's prerequisite individually. After adding with('prerequisite'), the query count decreased to two.
+# G2. Why the Delete Link Gave a 404
+
+My Delete link sent a GET request, but the subjects.destroy route expects a DELETE request. Replacing the link with a POST form containing @csrf and @method('DELETE') allowed Laravel to process the deletion correctly.
 
 
+# G3. The Second Argument of old()
 
-# G3. Your belongsTo method is named in the singular. What would break if you made it plural?
-
-The relationship method is named prerequisite() because each subject belongs to one prerequisite record. If I named it prerequisites(), Eloquent would infer a foreign key named prerequisites_id, which does not match the actual prerequisite_id column, unless I explicitly configured the relationship.
+The second argument of old() supplies the subject's existing value when the edit form first opens. Without it, the fields may be empty; using only the existing value would prevent previously typed values from being restored after validation fails.

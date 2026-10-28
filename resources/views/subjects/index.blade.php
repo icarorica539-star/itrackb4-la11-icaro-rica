@@ -104,8 +104,7 @@
 
                     {{-- Filter by Prerequisite --}}
                     <div class="col-md-4">
-                        <label for="prerequisite_id"
-                               class="form-label">
+                        <label for="prerequisite_id" class="form-label">
                             Prerequisite
                         </label>
 
@@ -162,6 +161,7 @@
                             <th>Title</th>
                             <th>Units</th>
                             <th>Prerequisite</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
 
@@ -180,10 +180,38 @@
                                         None
                                     @endif
                                 </td>
+
+                                <td>
+                                    {{-- Edit Button --}}
+                                    <a
+                                        href="{{ route('subjects.edit', $subject) }}"
+                                        class="btn btn-sm btn-primary"
+                                    >
+                                        Edit
+                                    </a>
+
+                                    {{-- Delete Form for Screenshot 8 --}}
+                                    <form
+                                        action="{{ route('subjects.destroy', $subject) }}"
+                                        method="POST"
+                                        class="d-inline"
+                                        onsubmit="return confirm('Are you sure you want to delete this subject?');"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-sm btn-danger"
+                                        >
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center">
+                                <td colspan="6" class="text-center">
                                     No subjects found.
                                 </td>
                             </tr>
@@ -203,9 +231,7 @@
 
 </div>
 
-<script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
